@@ -1,6 +1,29 @@
 from django.contrib import admin
 from . import models
 from django.utils.html import format_html
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+
+@admin.register(models.User)
+class UserAdmin(DjangoUserAdmin):
+    fieldsets = (
+    (None, {"fields": ("email", "password")}),
+    ("Personal info", {"fields": ("first_name", "last_name")}),
+    ("Permissions", {
+    "fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")
+    }),
+    ("Important dates", {"fields": ("last_login", "date_joined")}),
+    )
+    add_fieldsets = (
+    (None, {
+    "classes": ("wide",),
+    "fields": ("email", "password1", "password2")
+    }),
+    )
+    list_display = ("email", "first_name", "last_name", "is_staff")
+    list_filter = ("is_staff", "is_superuser", "is_active")
+    search_fields = ("email", "first_name", "last_name")
+    ordering = ("email",)
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'in_stock', 'price')
@@ -8,6 +31,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ('in_stock',)
     search_fields = ('name',)
     prepopulated_fields = {"slug": ("name",)} 
+    autocomplete_fields = ('tags',)
 
 class ProductTagAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
