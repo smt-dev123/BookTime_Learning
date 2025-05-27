@@ -84,7 +84,59 @@ class Basket(models.Model):
     SUBMITTED = 20
     STATUSES = ((OPEN, "Open"), (SUBMITTED, "Submitted"))
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    status = models.IntegerField(choices=STATUSES, default=OPEN)
+    def is_empty(self):
+        return self.basketline_set.all().count() == 0
+    def count(self):
+        return sum(i.quantity for i in self.basketline_set.all())
 class BasketLine(models.Model):
     basket = models.ForeignKey(Basket, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+
+class Order(models.Model):
+    NEW = 10
+    PAID = 20
+    DONE = 30
+    STATUSES = ((NEW, "New"), (PAID, "Paid"), (DONE, "Done"))
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    status = models.IntegerField(choices=STATUSES, default=NEW)
+    # Billing Address Fields
+    billing_name = models.CharField(max_length=60)
+    billing_address1 = models.CharField(max_length=60)
+    billing_address2 = models.CharField(max_length=60, blank=True)
+    billing_zip_code = models.CharField(max_length=12)
+    billing_city = models.CharField(max_length=60)
+    billing_country = models.CharField(max_length=3)
+    # Shipping Address Fields
+    shipping_name = models.CharField(max_length=60)
+    shipping_address1 = models.CharField(max_length=60)
+    shipping_address2 = models.CharField(max_length=60, blank=True)
+    shipping_zip_code = models.CharField(max_length=12)
+    shipping_city = models.CharField(max_length=60)
+    shipping_country = models.CharField(max_length=3)
+    # Timestamps
+    date_updated = models.DateTimeField(auto_now=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+class OrderLine(models.Model):
+    NEW = 10
+    PROCESSING = 20
+    SENT = 30
+    CANCELLED = 40
+    STATUSES = (
+    (NEW, "New"),
+    (PROCESSING, "Processing"),
+    (SENT, "Sent"),
+    (CANCELLED, "Cancelled"),
+    )
+    order = models.ForeignKey(
+    Order,
+    on_delete=models.CASCADE,
+    related_name="lines"
+    )
+    product = models.ForeignKey(
+    Product,
+    on_delete=models.PROTECT
+    )
+    status = models.IntegerField(choices=STATUSES, default=NEW)
