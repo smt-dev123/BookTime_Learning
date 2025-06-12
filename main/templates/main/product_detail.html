@@ -1,0 +1,260 @@
+{% extends "base.html" %} {% block content %}
+
+<h1>{{ object.name }}</h1>
+<table class="table">
+  <tr>
+    <th>Name</th>
+    <td>{{ object.name }}</td>
+  </tr>
+
+  <!-- 2. Images Row (now with React + fallback) -->
+  <tr id="fallback-images">
+    <th>Cover images</th>
+    <td>
+      {% for image in object.productimage_set.all %}
+      <img
+        src="{{ image.image.url }}"
+        alt="Cover image for {{ object.name }}"
+        class="img-thumbnail mr-2"
+        style="max-height: 150px"
+      />
+      {% empty %}
+      <span class="text-muted">No images available</span>
+      {% endfor %}
+    </td>
+  </tr>
+  <!-- Hidden React Gallery Row -->
+  <tr id="react-gallery-row" style="display: none">
+    <th>Cover images</th>
+    <td><div id="react-image-gallery"></div></td>
+  </tr>
+  <!-- 3. Price Row -->
+  <tr>
+    <th>Price</th>
+    <td>${{ object.price }}</td>
+    <!-- "$15.00" -->
+  </tr>
+  <!-- 4. Description Row -->
+  {% if object.description %}
+  <tr>
+    <th>Description</th>
+    <td>{{ object.description|linebreaks }}</td>
+    <!-- "Cybersecurity Book" -->
+  </tr>
+  {% endif %}
+  <!-- 5. Tags Row -->
+  <tr>
+    <th>Tags</th>
+    <td>
+      {% for tag in object.tags.all %}
+      <span class="badge bg-secondary">{{ tag.name }}</span>
+      <!-- "cyber" -->
+      {% empty %} No tags available {% endfor %}
+    </td>
+  </tr>
+
+  <tr>
+    <th>In stock</th>
+    <td>
+      <span
+        class="badge bg-{% if object.in_stock %}success{% else %}danger{% endif %}"
+      >
+        {{ object.in_stock|yesno:"Yes,No"|capfirst }}
+        <!-- "Yes" -->
+      </span>
+    </td>
+  </tr>
+  <!-- 7. Updated Row -->
+  <tr>
+    <th>Updated</th>
+    <td>{{ object.date_updated|date:"F Y" }}</td>
+    <!-- "May 2025" -->
+  </tr>
+</table>
+<!-- Purchase Button -->
+{% if object.in_stock %}
+<a
+  href="{% url 'add_to_basket' %}?product_id={{ object.id }}"
+  class="btn btn- primary"
+>
+  Add to basket
+</a>
+{% else %}
+<button class="btn btn-secondary" disabled>Out of stock</button>
+{% endif %}
+<a href="{% url 'products' tag='all' %}" class="btn btn-outline-secondary ms-2">
+  Back to products
+</a>
+{% endblock %} {% block js %}
+<!-- React CDN -->
+<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+<script>
+  const productImages = [
+    {% for image in object.productimage_set.all %}
+    {
+      id: "{{ image.id }}",
+      fullSize: "{{ image.image.url }}",
+      thumbnail: "{{ image.thumbnail.url }}",
+      alt: "{{ object.name|escapejs }} - Image {{ forloop.counter }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+
+  if (productImages.length > 0) {
+    document.addEventListener('DOMContentLoaded', function () {
+      try {
+        class ImageGallery extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = { currentIndex: 0 };
+          }
+
+          handleThumbnailClick = (index) => {
+            this.setState({ currentIndex: index });
+          };
+
+          handlePrevious = () => {
+            this.setState((prevState) => ({
+              currentIndex:
+                (prevState.currentIndex - 1 + this.props.images.length) %
+                this.props.images.length
+            }));
+          };
+
+          handleNext = () => {
+            this.setState((prevState) => ({
+              currentIndex:
+                (prevState.currentIndex + 1) % this.props.images.length
+            }));
+          };
+
+          render() {
+            const { images } = this.props;
+            const { currentIndex } = this.state;
+            const currentImage = images[currentIndex];
+
+            return React.createElement('div', { className: 'image-gallery' }, [
+              React.createElement(
+                'div',
+                { key: 'main-container', className: 'main-image-container' },
+                [
+                  React.createElement('img', {
+                    key: 'main',
+                    src: currentImage.fullSize,
+                    alt: currentImage.alt,
+                    className: 'main-image'
+                  }),
+                  images.length > 1 &&
+                    React.createElement(
+                      'button',
+                      {
+                        key: 'prev',
+                        className: 'nav-button prev-button',
+                        onClick: this.handlePrevious
+                      },
+                      '❮'
+                    ),
+                  images.length > 1 &&
+                    React.createElement(
+                      'button',
+                      {
+                        key: 'next',
+                        className: 'nav-button next-button',
+                        onClick: this.handleNext
+                      },
+                      '❯'
+                    )
+                ]
+              ),
+              React.createElement(
+                'div',
+                { key: 'thumbs', className: 'thumbnails' },
+                images.map((img, index) =>
+                  React.createElement('img', {
+                    key: img.id,
+                    src: img.thumbnail,
+                    alt: img.alt,
+                    className:
+                      'thumbnail' + (currentIndex === index ? ' active' : ''),
+                    onClick: () => this.handleThumbnailClick(index)
+                  })
+                )
+              )
+            ]);
+          }
+        }
+
+        const container = document.getElementById('react-image-gallery');
+        ReactDOM.render(
+          React.createElement(ImageGallery, { images: productImages }),
+          container
+        );
+
+        document.getElementById('react-gallery-row').style.display = '';
+        document.getElementById('fallback-images').style.display = 'none';
+      } catch (e) {
+        console.error("React failed, using fallback:", e);
+      }
+    });
+  }
+</script>
+
+<style>
+  .image-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .main-image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .main-image {
+    max-width: 100%;
+    max-height: 400px;
+    border: 1px solid #ddd;
+  }
+  .nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 50%;
+  }
+  .prev-button {
+    left: 10px;
+  }
+  .next-button {
+    right: 10px;
+  }
+  .nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  .thumbnails {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .thumbnail {
+    width: 80px;
+    height: 110px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 1px solid #ccc;
+  }
+  .thumbnail.active {
+    border: 2px solid #0d6efd;
+  }
+</style>
+
+{% endblock %}

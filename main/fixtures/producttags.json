@@ -1,0 +1,14 @@
+[
+{
+  "model": "main.producttag",
+  "fields": {
+    "name": "Finance",
+    "slug": "finance",
+    "description": "",
+    "active": true,
+    "products": [
+      1
+    ]
+  }
+}
+]

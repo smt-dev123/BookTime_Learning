@@ -1,0 +1,21 @@
+# Django-specific
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.sqlite3
+*.log
+local_settings.py
+db.sqlite3
+/staticfiles/
+
+# specific entries
+/media/product-images/
+/media/productthumbnails/
+
+# Environment
+.env
+.venv/
+venv/
+ENV/
+env
