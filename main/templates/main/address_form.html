@@ -1,7 +1,68 @@
-{% extends "base.html" %} {% block content %}
-<h2>Add a new address</h2>
-<form method="POST">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+{% extends "base.html" %} {% load static %} {% block content %}
+<!-- Add Address Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-4">
+            <h2 class="fw-bold mb-3 text-center">Add New Address</h2>
+            <p class="text-muted text-center mb-4">
+              Fill in the details below to add a new address.
+            </p>
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+              {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+            <form method="POST">
+              {% csrf_token %}
+              <div class="form-as-p">{{ form.as_p }}</div>
+              <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  Save Address
+                </button>
+                <a
+                  href="{% url 'address_list' %}"
+                  class="btn btn-outline-secondary btn-lg"
+                  >Cancel</a
+                >
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style scoped>
+  .form-as-p p {
+    margin-bottom: 1rem;
+  }
+  .form-as-p label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+  .form-as-p input[type="text"],
+  .form-as-p input[type="email"],
+  .form-as-p select {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+  }
+  .form-as-p input[type="text"].is-invalid,
+  .form-as-p select.is-invalid {
+    border-color: #dc3545;
+  }
+  .form-as-p .invalid-feedback {
+    display: block;
+    color: #dc3545;
+    font-size: 0.875rem;
+  }
+</style>
 {% endblock content %}

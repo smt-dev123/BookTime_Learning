@@ -1,4 +1,46 @@
-{% extends 'base.html' %} {% block content %}
-<h2>About us</h2>
-<p>BookTime is a company that sells books online.</p>
+{% extends "base.html" %} {% load static %} {% block content %}
+<!-- About Header Section -->
+<section class="py-5 bg-primary text-white">
+  <div class="container text-center">
+    <h1 class="display-4 fw-bold mb-3">About BookTime</h1>
+    <p class="lead mb-4">
+      Your trusted online bookstore, bringing stories to life.
+    </p>
+  </div>
+</section>
+
+<!-- About Content Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <h2 class="fw-bold mb-3">Our Story</h2>
+        <p class="text-muted mb-4">
+          BookTime is a passionate community of book lovers dedicated to making
+          literature accessible to everyone. Founded with a love for stories, we
+          curate a diverse collection of books, from timeless classics to modern
+          bestsellers, all available at your fingertips. Our mission is to
+          inspire, educate, and entertain through the power of reading.
+        </p>
+        <p class="text-muted mb-4">
+          At BookTime, we believe in the magic of a good book and the joy of
+          discovering your next favorite read. Whether you're a lifelong reader
+          or just starting your literary journey, we're here to help you find
+          the perfect book.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call-to-Action Section -->
+<section class="py-5 bg-light">
+  <div class="container text-center">
+    <h3 class="fw-bold mb-3">Explore Our Collection</h3>
+    <p class="lead text-muted mb-4">
+      Dive into our wide range of books and find your next great read.
+    </p>
+    <a href="/products/all" class="btn btn-primary btn-lg">Shop Now</a>
+  </div>
+</section>
 {% endblock content %}

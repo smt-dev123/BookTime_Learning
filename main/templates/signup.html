@@ -1,53 +1,85 @@
-{% extends "base.html" %} {% block content %}
-<h2>Sign Up</h2>
-<p>Please fill out the form below.</p>
-
-<form method="POST">
-  {% csrf_token %}
-
-  <div class="form-group">
-    {{ form.email.label_tag }}
-    <input
-      type="email"
-      class="form-control {% if form.email.errors %} is-invalid {% endif %}"
-      id="id_email"
-      name="email"
-      placeholder="Your email"
-      value="{{ form.email.value|default:'' }}"
-    />
-    {% if form.email.errors %}
-    <div class="invalid-feedback">{{ form.email.errors }}</div>
-    {% endif %}
+{% extends "base.html" %} {% load static %} {% block content %}
+<!-- Signup Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="fw-bold mb-3 text-center">Sign Up</h2>
+            <p class="text-muted text-center mb-4">
+              Please fill out the form below to create an account.
+            </p>
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+              {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+            <form method="POST">
+              {% csrf_token %}
+              <div class="mb-3">
+                {{ form.email.label_tag }}
+                <input
+                  type="email"
+                  class="form-control {% if form.email.errors %} is-invalid{% endif %}"
+                  id="id_email"
+                  name="email"
+                  placeholder="Your email"
+                  value="{{ form.email.value|default:'' }}"
+                  aria-describedby="emailErrors"
+                />
+                {% if form.email.errors %}
+                <div id="emailErrors" class="invalid-feedback">
+                  {{ form.email.errors }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                {{ form.password1.label_tag }}
+                <input
+                  type="password"
+                  class="form-control {% if form.password1.errors %} is-invalid{% endif %}"
+                  id="id_password1"
+                  name="password1"
+                  value="{{ form.password1.value|default:'' }}"
+                  aria-describedby="password1Errors"
+                />
+                {% if form.password1.errors %}
+                <div id="password1Errors" class="invalid-feedback">
+                  {{ form.password1.errors }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                {{ form.password2.label_tag }}
+                <input
+                  type="password"
+                  class="form-control {% if form.password2.errors %} is-invalid{% endif %}"
+                  id="id_password2"
+                  name="password2"
+                  value="{{ form.password2.value|default:'' }}"
+                  aria-describedby="password2Errors"
+                />
+                {% if form.password2.errors %}
+                <div id="password2Errors" class="invalid-feedback">
+                  {{ form.password2.errors }}
+                </div>
+                {% endif %}
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg w-100">
+                Create Account
+              </button>
+            </form>
+            <div class="text-center mt-3">
+              <p class="text-muted">
+                Already have an account?
+                <a href="{% url 'login' %}" class="text-primary">Login</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="form-group">
-    {{ form.password1.label_tag }}
-    <input
-      type="password"
-      class="form-control {% if form.password1.errors %} is-invalid {% endif %}"
-      id="id_password1"
-      name="password1"
-      value="{{ form.password1.value|default:'' }}"
-    />
-    {% if form.password1.errors %}
-    <div class="invalid-feedback">{{ form.password1.errors }}</div>
-    {% endif %}
-  </div>
-
-  <div class="form-group">
-    {{ form.password2.label_tag }}
-    <input
-      type="password"
-      class="form-control {% if form.password2.errors %} is-invalid {% endif %}"
-      id="id_password2"
-      name="password2"
-      value="{{ form.password2.value|default:'' }}"
-    />
-    {% if form.password2.errors %}
-    <div class="invalid-feedback">{{ form.password2.errors }}</div>
-    {% endif %}
-  </div>
-
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+</section>
 {% endblock content %}

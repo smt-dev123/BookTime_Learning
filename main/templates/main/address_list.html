@@ -1,29 +1,58 @@
-{% extends "base.html" %}
-
-{% block content %}
-    <h1>List of your addresses:</h1>
-
-    {% for address in object_list %}
-        <p>
-            {{ address.name }}<br>
-            {{ address.address1 }}<br>
-            {{ address.address2 }}<br>
-            {{ address.city }}<br>
-            {{ address.get_country_display }}<br>
-        </p>
-        <p>
-            <a href="{% url "address_update" address.id %}">Update address</a>
-        </p>
-        <p>
-            <a href="{% url "address_delete" address.id %}">Delete address</a>
-        </p>
-
-        {% if not forloop.last %}
-            <hr>
-        {% endif %}
-    {% endfor %}
-
-    <p>
-        <a href="{% url "address_create" %}">Add new address</a>
-    </p>
+{% extends "base.html" %} {% load static %} {% block content %}
+<!-- Address List Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h1 class="fw-bold mb-4 text-center">Your Addresses</h1>
+    {% if object_list %}
+    <div class="text-center mt-4 mb-4">
+      <a href="{% url 'address_create' %}" class="btn btn-primary btn-lg"
+        >Add New Address</a
+      >
+    </div>
+    {% endif %} {% if object_list %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for address in object_list %}
+      <div class="col">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <strong>{{ address.name }}</strong>
+              </li>
+              <li class="list-group-item">{{ address.address1 }}</li>
+              {% if address.address2 %}
+              <li class="list-group-item">{{ address.address2 }}</li>
+              {% endif %}
+              <li class="list-group-item">{{ address.city }}</li>
+              <li class="list-group-item">{{ address.get_country_display }}</li>
+            </ul>
+            <div class="d-flex gap-2 mt-3">
+              <a
+                href="{% url 'address_update' address.id %}"
+                class="btn btn-outline-primary btn-sm"
+                aria-label="Update address for {{ address.name }}"
+                >Update</a
+              >
+              <a
+                href="{% url 'address_delete' address.id %}"
+                class="btn btn-outline-danger btn-sm"
+                aria-label="Delete address for {{ address.name }}"
+                >Delete</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center p-4 bg-white shadow-sm rounded-3">
+      <p class="text-muted mb-4">You have no addresses saved.</p>
+      <a href="{% url 'address_create' %}" class="btn btn-primary btn-lg"
+        >Add New Address</a
+      >
+    </div>
+    {% endif %}
+  </div>
+</section>
 {% endblock content %}

@@ -1,7 +1,120 @@
-{% extends "base.html" %} {% block content %}
-<h2>Add a new address</h2>
-<form method="POST">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Add Address Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="fw-bold mb-3 text-center">Add a New Address</h2>
+            <p class="text-muted text-center mb-4">Please fill out the form below to add a new address.</p>
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+              {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+            <form method="POST">
+              {% csrf_token %}
+              <div class="mb-3">
+                {{ form.name.label_tag }}
+                <input
+                  type="text"
+                  class="form-control {% if form.name.errors %} is-invalid{% endif %}"
+                  id="{{ form.name.id_for_label }}"
+                  name="{{ form.name.name }}"
+                  value="{{ form.name.value|default:'' }}"
+                  placeholder="Full name"
+                  aria-describedby="nameErrors"
+                />
+                {% if form.name.errors %}
+                <div id="nameErrors" class="invalid-feedback">
+                  {{ form.name.errors }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                {{ form.address1.label_tag }}
+                <input
+                  type="text"
+                  class="form-control {% if form.address1.errors %} is-invalid{% endif %}"
+                  id="{{ form.address1.id_for_label }}"
+                  name="{{ form.address1.name }}"
+                  value="{{ form.address1.value|default:'' }}"
+                  placeholder="Street address"
+                  aria-describedby="address1Errors"
+                />
+                {% if form.address1.errors %}
+                <div id="address1Errors" class="invalid-feedback">
+                  {{ form.address1.errors }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                {{ form.address2.label_tag }}
+                <input
+                  type="text"
+                  class="form-control {% if form.address2.errors %} is-invalid{% endif %}"
+                  id="{{ form.address2.id_for_label }}"
+                  name="{{ form.address2.name }}"
+                  value="{{ form.address2.value|default:'' }}"
+                  placeholder="Apartment, suite, etc. (optional)"
+                  aria-describedby="address2Errors"
+                />
+                {% if form.address2.errors %}
+                <div id="address2Errors" class="invalid-feedback">
+                  {{ form.address2.errors }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                {{ form.city.label_tag }}
+                <input
+                  type="text"
+                  class="form-control {% if form.city.errors %} is-invalid{% endif %}"
+                  id="{{ form.city.id_for_label }}"
+                  name="{{ form.city.name }}"
+                  value="{{ form.city.value|default:'' }}"
+                  placeholder="City"
+                  aria-describedby="cityErrors"
+                />
+                {% if form.city.errors %}
+                <div id="cityErrors" class="invalid-feedback">
+                  {{ form.city.errors }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                {{ form.country.label_tag }}
+                <select
+                  class="form-select {% if form.country.errors %} is-invalid{% endif %}"
+                  id="{{ form.country.id_for_label }}"
+                  name="{{ form.country.name }}"
+                  aria-describedby="countryErrors"
+                >
+                  {% for value, label in form.country.field.choices %}
+                  <option value="{{ value }}" {% if form.country.value == value %}selected{% endif %}>
+                    {{ label }}
+                  </option>
+                  {% endfor %}
+                </select>
+                {% if form.country.errors %}
+                <div id="countryErrors" class="invalid-feedback">
+                  {{ form.country.errors }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Save Address</button>
+                <a href="{% url 'address_list' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock content %}
