@@ -1,4 +1,3 @@
-
 # BookTime E-Commerce Platform
 
 BookTime is a Django-based e-commerce web application for browsing products, managing a shopping basket, and processing orders. It supports user authentication, address management, and full order checkout capabilities. Product images and thumbnails are handled via media directories.
@@ -27,18 +26,21 @@ BookTime is a Django-based e-commerce web application for browsing products, man
 ## 🛠️ Installation
 
 1. **Clone the Repository**
+
    ```bash
    git clone https://github.com/smt-dev123/BookTime_Learning
    cd booktime
    ```
 
 2. **Set Up a Virtual Environment**
+
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
 3. **Install Dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
@@ -54,34 +56,25 @@ BookTime is a Django-based e-commerce web application for browsing products, man
    ```
 
 5. **Apply Migrations**
+
    ```bash
    python manage.py makemigrations
    python manage.py migrate
    ```
 
 6. **Create a Superuser**
+
    ```bash
    python manage.py createsuperuser
    ```
 
 7. **Run the Development Server**
+
    ```bash
    python manage.py runserver
    ```
 
    Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) to access the app.
-
----
-
-## 💻 Usage
-
-- **Home Page**: `/` — Browse available products.
-- **Authentication**: `/login/` or `/signup/`
-- **Basket Operations**: `/add_to_basket/`, `/basket/`
-- **Checkout Process**:
-  - Address Selection: `/order/address_select/`
-  - Order Completion: `/order/done/`
-- **Admin Panel**: `/admin/` — Manage products, orders, and users.
 
 ---
 
@@ -106,25 +99,6 @@ booktime/
 ├── README.md                  # Project documentation
 ├── requirements.txt           # Python dependencies
 ```
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository.
-2. Create a feature branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add feature"
-   ```
-4. Push to GitHub:
-   ```bash
-   git push origin feature-name
-   ```
-5. Open a Pull Request.
 
 ---
 
